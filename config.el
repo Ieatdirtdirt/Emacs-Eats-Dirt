@@ -303,6 +303,7 @@ one, an error is signaled."
 (use-package dashboard
   :ensure t 
   :init
+  (setq initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
   (setq initial-buffer-choice 'dashboard-open)
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
@@ -310,6 +311,8 @@ one, an error is signaled."
   (setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
   (setq dashboard-startup-banner "/home/dt/.config/emacs/images/emacs-dash.png")  ;; use custom image as banner
   (setq dashboard-center-content t) ;; set to 't' for centered content
+  (setq dashbaord-footer-icon "emacs")
+  (setq dashboard-display-icons-p t)
   (setq dashboard-items '((recents . 5)
                           (agenda . 5 )
                           (bookmarks . 3)
