@@ -25,6 +25,7 @@
   - [[#disable-menubar-toolbars-and-scrollbars][Disable Menubar, Toolbars and Scrollbars]]
   - [[#display-line-numbers-and-truncated-lines][Display Line Numbers and Truncated Lines]]
 - [[#ivy-counsel][IVY (COUNSEL)]]
+- [[#maximize][MAXIMIZE]]
 - [[#language-support][LANGUAGE SUPPORT]]
 - [[#org-mode][ORG MODE]]
   - [[#enabling-table-of-contents][Enabling Table of Contents]]
@@ -127,7 +128,6 @@
     (evil-collection-init))
   (use-package evil-tutor)
 #+end_src
- 
 ** General Keybindings
 #+begin_src emacs-lisp
 (use-package general
@@ -417,7 +417,6 @@ This package implements hiding or abbreviation of the modeline displays (lighter
 
 #+begin_src emacs-lisp
 (use-package diminish)
-
 #+end_src
 * FLYCHECK
 Install =luacheck= from your Linux distro's repositories for flycheck to work correctly with lua files.  Install =python-pylint= for flycheck to work with python files.  Haskell works with flycheck as long as =haskell-ghc= or =haskell-stack-ghc= is installed.  For more information on language support for flycheck, [[https://www.flycheck.org/en/latest/languages.html][read this]].
@@ -498,6 +497,7 @@ Let's make GNU Emacs look a little better.
 #+begin_src emacs-lisp
   (use-package counsel
     :after ivy
+    :diminish
     :config (counsel-mode))
   
   (use-package ivy
@@ -505,6 +505,7 @@ Let's make GNU Emacs look a little better.
     ;; ivy-resume resumes the last Ivy-based completion.
     (("C-c C-r" . ivy-resume)
      ("C-x B" . ivy-switch-buffer-other-window))
+    :diminish
     :custom
     (setq ivy-use-virtual-buffers t)
     (setq ivy-count-format "(%d/%d) ")
@@ -529,7 +530,10 @@ Let's make GNU Emacs look a little better.
                                  'ivy-rich-switch-buffer-transformer))
 
 #+end_src
-
+* MAXIMIZE
+#+begin_src emacs-lisp
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+end_src
 * LANGUAGE SUPPORT
 Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM, AWK, C, C++, Fortran, Icon, IDL (CORBA), IDLWAVE, Java, Javascript, M4, Makefiles, Metafont, Modula2, Object Pascal, Objective-C, Octave, Pascal, Perl, Pike, PostScript, Prolog, Python, Ruby, Simula, SQL, Tcl, Verilog, and VHDL.  Other languages will require you to install additional modes.
 

@@ -374,6 +374,7 @@ one, an error is signaled."
 
 (use-package counsel
   :after ivy
+  :diminish
   :config (counsel-mode))
 
 (use-package ivy
@@ -381,6 +382,7 @@ one, an error is signaled."
   ;; ivy-resume resumes the last Ivy-based completion.
   (("C-c C-r" . ivy-resume)
    ("C-x B" . ivy-switch-buffer-other-window))
+  :diminish
   :custom
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
@@ -403,6 +405,8 @@ one, an error is signaled."
   :config
   (ivy-set-display-transformer 'ivy-switch-buffer
                                'ivy-rich-switch-buffer-transformer))
+
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (use-package toc-org
     :commands toc-org-enable
