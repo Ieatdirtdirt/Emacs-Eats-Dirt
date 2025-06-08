@@ -10,10 +10,10 @@
   - [[#load-evil-mode][Load Evil Mode]]
   - [[#general-keybindings][General Keybindings]]
 - [[#all-the-icons][ALL THE ICONS]]
+- [[#aidermacs][AIDERMACS]]
 - [[#app-launchers][APP LAUNCHERS]]
   - [[#counsel-linux-app][Counsel-Linux-App]]
   - [[#app-launcher][App-Launcher]]
-- [[#atatri-breakout][ATATRI BREAKOUT]]
 - [[#buffer-move][BUFFER-MOVE]]
 - [[#company][COMPANY]]
 - [[#dashboard][DASHBOARD]]
@@ -29,6 +29,7 @@
 - [[#ivy-counsel][IVY (COUNSEL)]]
 - [[#maximize][MAXIMIZE]]
 - [[#language-support][LANGUAGE SUPPORT]]
+- [[#neotree][NEOTREE]]
 - [[#org-mode][ORG MODE]]
   - [[#enabling-table-of-contents][Enabling Table of Contents]]
   - [[#enabling-org-bullets][Enabling Org Bullets]]
@@ -49,7 +50,7 @@
 * IMPORTANT PROGRAMS TO LOAD FIRST
 ** Elpaca Package Manager
 #+begin_src emacs-lisp
-(defvar elpaca-installer-version 0.10)
+(defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -159,6 +160,13 @@
     "b p" '(previous-buffer :wk "Previous buffer")
     "b r" '(revert-buffer :wk "Reload buffer"))
 
+ (jay/leader-keys
+    "d" '(:ignore t :wk "Dired")
+    "d d" '(dired :wk "Open dired")
+    "d j" '(dired-jump :wk "Dired jump to current")
+    "d n" '(neotree-dir :wk "Open directory in neotree")
+    "d p" '(peep-dired :wk "Peep-dired"))
+
   (jay/leader-keys
     "e" '(:ignore t :wk "Eshell/Evaluate")    
     "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
@@ -237,6 +245,21 @@ This is an icon set that can be used with dashboard, dired, ibuffer and other Em
   :hook (ibuffer-mode . (lambda () (all-the-icons-ibuffer-mode t))))
 
 #+end_src
+* AIDERMACS
+#+begin_src emacs-lisp
+(use-package transient)
+
+(use-package aidermacs
+  :bind (("C-c a" . aidermacs-transient-menu))
+  :config
+  ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
+  (setenv "LM_STUDIO_API_KEY" "dummy-api-key")
+  (setenv "LM_STUDIO_API_BASE" "http://localhost:1234/v1")
+  :custom
+  ; See the Configuration section below
+  (aidermacs-use-architect-mode t))
+  (setq aidermacs-default-model "lm_studio/qwen3-8b")
+#+end_src
 * APP LAUNCHERS
 
 ** Counsel-Linux-App
@@ -290,10 +313,6 @@ The =app-launcher= is a better run launcher since it reads the desktop applicati
                     (app-launcher-run-app)
                     (delete-frame))))
 
-#+end_src
-* ATATRI BREAKOUT
-#+begin_src emacs-lisp
-(use-package breakout-game)
 #+end_src
 * BUFFER-MOVE
 Creating some functions to allow us to easily move windows (splits) around.  The following block of code was taken from buffer-move.el found on the EmacsWiki:
@@ -444,7 +463,7 @@ This package implements hiding or abbreviation of the modeline displays (lighter
     (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file)
 )
 
-;;(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+;;(add-hook 'peep-dired-hook 'evil-normalize-keymaps
 
 #+end_src
 * FLYCHECK
@@ -565,6 +584,36 @@ Let's make GNU Emacs look a little better.
 #+end_src
 * LANGUAGE SUPPORT
 Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM, AWK, C, C++, Fortran, Icon, IDL (CORBA), IDLWAVE, Java, Javascript, M4, Makefiles, Metafont, Modula2, Object Pascal, Objective-C, Octave, Pascal, Perl, Pike, PostScript, Prolog, Python, Ruby, Simula, SQL, Tcl, Verilog, and VHDL.  Other languages will require you to install additional modes.
+
+* NEOTREE
+Neotree is a file tree viewer.  When you open neotree, it jumps to the current file thanks to neo-smart-open.  The neo-window-fixed-size setting makes the neotree width be adjustable.  NeoTree provides following themes: classic, ascii, arrow, icons, and nerd.  Theme can be configed by setting "two" themes for neo-theme: one for the GUI and one for the terminal.  I like to use 'SPC t' for 'toggle' keybindings, so I have used 'SPC t n' for toggle-neotree.
+
+| COMMAND        | DESCRIPTION               | KEYBINDING |
+|----------------+---------------------------+------------|
+| neotree-toggle | /Toggle neotree/            | SPC t n    |
+| neotree- dir   | /Open directory in neotree/ | SPC d n    |
+
+#+BEGIN_SRC emacs-lisp
+(use-package neotree
+  :config
+  (setq neo-smart-open t
+        neo-show-hidden-files t
+        neo-window-width 55
+        neo-window-fixed-size nil
+        neo-window-position 'right
+        inhibit-compacting-font-caches t
+        projectile-switch-project-action 'neotree-projectile-action) 
+        ;; truncate long file names in neotree
+        (add-hook 'neo-after-create-hook
+           #'(lambda (_)
+               (with-current-buffer (get-buffer neo-buffer-name)
+                 (setq truncate-lines t)
+                 (setq word-wrap nil)
+                 (make-local-variable 'auto-hscroll-mode)
+                 (setq auto-hscroll-mode nil)))))
+
+;; show hidden files
+#+end_src
 
 * ORG MODE
 ** Enabling Table of Contents

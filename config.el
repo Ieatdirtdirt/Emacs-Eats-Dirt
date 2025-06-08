@@ -1,4 +1,4 @@
-(defvar elpaca-installer-version 0.10)
+(defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -102,6 +102,13 @@
     "b p" '(previous-buffer :wk "Previous buffer")
     "b r" '(revert-buffer :wk "Reload buffer"))
 
+ (jay/leader-keys
+    "d" '(:ignore t :wk "Dired")
+    "d d" '(dired :wk "Open dired")
+    "d j" '(dired-jump :wk "Dired jump to current")
+    "d n" '(neotree-dir :wk "Open directory in neotree")
+    "d p" '(peep-dired :wk "Peep-dired"))
+
   (jay/leader-keys
     "e" '(:ignore t :wk "Eshell/Evaluate")    
     "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
@@ -174,6 +181,19 @@
 (use-package all-the-icons-ibuffer
   :hook (ibuffer-mode . (lambda () (all-the-icons-ibuffer-mode t))))
 
+(use-package transient)
+
+(use-package aidermacs
+  :bind (("C-c a" . aidermacs-transient-menu))
+  :config
+  ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
+  (setenv "LM_STUDIO_API_KEY" "dummy-api-key")
+  (setenv "LM_STUDIO_API_BASE" "http://localhost:1234/v1")
+  :custom
+  ; See the Configuration section below
+  (aidermacs-use-architect-mode t))
+  (setq aidermacs-default-model "lm_studio/qwen3-8b")
+
 (defun emacs-counsel-launcher ()
   "Create and select a frame called emacs-counsel-launcher which consists only of a minibuffer and has specific dimensions. Runs counsel-linux-app on that frame, which is an emacs command that prompts you to select an app and open it in a dmenu like behaviour. Delete the frame after that command has exited"
   (interactive)
@@ -214,8 +234,6 @@
                   (unwind-protect
                     (app-launcher-run-app)
                     (delete-frame))))
-
-(use-package breakout-game)
 
 (require 'windmove)
 
@@ -346,7 +364,7 @@ one, an error is signaled."
     (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file)
 )
 
-;;(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+;;(add-hook 'peep-dired-hook 'evil-normalize-keymaps
 
 (use-package flycheck
   :ensure t
@@ -429,6 +447,26 @@ one, an error is signaled."
                                'ivy-rich-switch-buffer-transformer))
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(use-package neotree
+  :config
+  (setq neo-smart-open t
+        neo-show-hidden-files t
+        neo-window-width 55
+        neo-window-fixed-size nil
+        neo-window-position 'right
+        inhibit-compacting-font-caches t
+        projectile-switch-project-action 'neotree-projectile-action) 
+        ;; truncate long file names in neotree
+        (add-hook 'neo-after-create-hook
+           #'(lambda (_)
+               (with-current-buffer (get-buffer neo-buffer-name)
+                 (setq truncate-lines t)
+                 (setq word-wrap nil)
+                 (make-local-variable 'auto-hscroll-mode)
+                 (setq auto-hscroll-mode nil)))))
+
+;; show hidden files
 
 (use-package toc-org
     :commands toc-org-enable
