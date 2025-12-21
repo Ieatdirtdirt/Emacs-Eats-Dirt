@@ -41,7 +41,7 @@
   (elpaca-use-package-mode)
   ;; Assume :ensure t unless otherwise specified.
   (setq elpaca-use-package-by-default t))
-
+(elpaca '(cond-let :repo "/home/jay/cond-let"))
 ;; Block until current queue processed.
 (elpaca-wait)
 
@@ -377,7 +377,7 @@ one, an error is signaled."
   :height 110
   :weight 'medium)
 (set-face-attribute 'variable-pitch nil
-  :font "Cantarell" 
+  :font "Bitstream Vera Sans"
   :height 120
   :weight 'medium)
 (set-face-attribute 'fixed-pitch nil
@@ -467,6 +467,8 @@ one, an error is signaled."
                  (setq auto-hscroll-mode nil)))))
 
 ;; show hidden files
+
+(use-package magit)
 
 (use-package toc-org
     :commands toc-org-enable

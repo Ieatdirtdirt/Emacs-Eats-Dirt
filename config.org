@@ -30,6 +30,7 @@
 - [[#maximize][MAXIMIZE]]
 - [[#language-support][LANGUAGE SUPPORT]]
 - [[#neotree][NEOTREE]]
+- [[#magit][MAGIT]]
 - [[#org-mode][ORG MODE]]
   - [[#enabling-table-of-contents][Enabling Table of Contents]]
   - [[#enabling-org-bullets][Enabling Org Bullets]]
@@ -50,6 +51,7 @@
 * IMPORTANT PROGRAMS TO LOAD FIRST
 ** Elpaca Package Manager
 #+begin_src emacs-lisp
+
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -93,7 +95,7 @@
   (elpaca-use-package-mode)
   ;; Assume :ensure t unless otherwise specified.
   (setq elpaca-use-package-by-default t))
-
+(elpaca '(cond-let :repo "/home/jay/cond-let"))
 ;; Block until current queue processed.
 (elpaca-wait)
 
@@ -487,7 +489,7 @@ Defining the various fonts that Emacs will use.
     :height 110
     :weight 'medium)
   (set-face-attribute 'variable-pitch nil
-    :font "Cantarell" 
+    :font "Bitstream Vera Sans"
     :height 120
     :weight 'medium)
   (set-face-attribute 'fixed-pitch nil
@@ -614,7 +616,10 @@ Neotree is a file tree viewer.  When you open neotree, it jumps to the current f
 
 ;; show hidden files
 #+end_src
-
+* MAGIT
+#+begin_src emacs-lisp
+(use-package magit)
+#+end_src
 * ORG MODE
 ** Enabling Table of Contents
 #+begin_src emacs-lisp
