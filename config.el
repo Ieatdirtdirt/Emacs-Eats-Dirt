@@ -41,7 +41,7 @@
   (elpaca-use-package-mode)
   ;; Assume :ensure t unless otherwise specified.
   (setq elpaca-use-package-by-default t))
-(elpaca '(cond-let :repo "/home/jay/cond-let"))
+(elpaca '(cond-let :repo "/Users/jaysingh/cond-let"))
 ;; Block until current queue processed.
 (elpaca-wait)
 
