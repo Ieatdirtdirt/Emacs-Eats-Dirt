@@ -448,25 +448,29 @@ one, an error is signaled."
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-(use-package neotree
-  :config
-  (setq neo-smart-open t
-        neo-show-hidden-files t
-        neo-window-width 55
-        neo-window-fixed-size nil
-        neo-window-position 'right
-        inhibit-compacting-font-caches t
-        projectile-switch-project-action 'neotree-projectile-action) 
-        ;; truncate long file names in neotree
-        (add-hook 'neo-after-create-hook
-           #'(lambda (_)
-               (with-current-buffer (get-buffer neo-buffer-name)
-                 (setq truncate-lines t)
-                 (setq word-wrap nil)
-                 (make-local-variable 'auto-hscroll-mode)
-                 (setq auto-hscroll-mode nil)))))
+(use-package lsp-mode
+    :init
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    (setq lsp-keymap-prefix "C-c l")
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+           (java-mode . lsp)
+  	 (python-mode . lsp)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp)
+  ;; optionally
+  (use-package lsp-ui :commands lsp-ui-mode)
+  ;; if you are ivy user
+  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
-;; show hidden files
+  ;; optionally if you want to use debugger
+(use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
+(use-package dap-java :ensure nil)
+  ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+
+  ;; optional if you want which-key integration
+  (use-package lsp-java)
 
 (use-package magit)
 
